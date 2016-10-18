@@ -80,6 +80,159 @@ func TestDebug(t *testing.T) {
 	SetOutput(org_writer)
 }
 
+func TestWithField(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+
+	localLogger := WithField("testkey", "testvalue")
+
+	localLogger.Info("test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["testkey"] == nil {
+		t.Error("Message does not have testkey set")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestWarn(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("warn")
+
+	Warn("test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "warning" {
+		t.Error("Message not written with warning level")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestError(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("error")
+
+	Error("test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "error" {
+		t.Error("Message not written with error level")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestErrorf(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("error")
+
+	Errorf("Msg: %s", "test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "error" {
+		t.Error("Message not written with error level")
+	}
+
+	if data["msg"] != "Msg: test" {
+		t.Error("Formatting incorrect")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestInfof(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("info")
+
+	Infof("Msg: %s", "test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "info" {
+		t.Error("Message not written with info level")
+	}
+
+	if data["msg"] != "Msg: test" {
+		t.Error("Formatting incorrect")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestWarningf(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("warn")
+
+	Warningf("Msg: %s", "test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "warning" {
+		t.Error("Message not written with warning level")
+	}
+
+	if data["msg"] != "Msg: test" {
+		t.Error("Formatting incorrect")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestDebugf(t *testing.T) {
+	org_writer := logger.GetLogger().Logger.Out
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("debug")
+
+	Debugf("Msg: %s", "test")
+
+	data := parseJson(out.GetBuffer())
+
+	if data["level"] != "debug" {
+		t.Error("Message not written with debug level")
+	}
+
+	if data["msg"] != "Msg: test" {
+		t.Error("Formatting incorrect")
+	}
+
+	SetLevel("info")
+	SetOutput(org_writer)
+}
+
+func TestUnknownLogLevel(t *testing.T) {
+	SetLevel("abcd")
+
+	if GetLoglevel() != "info" {
+		t.Error("Level not set to info when given an unknown level")
+	}
+
+	SetLevel("info")
+}
+
 func parseJson(data []byte) map[string]interface{} {
 	d := make(map[string]interface{})
 	_ = json.Unmarshal(data, &d)

@@ -18,10 +18,10 @@ var (
 func init() {
 	mu = &sync.Mutex{}
 	mu.Lock()
+	defer mu.Unlock()
 	logrus.SetOutput(os.Stdout)
 	hostname, _ := os.Hostname()
 	ctxlogger = logrus.WithField("pid", os.Getpid()).WithField("hostname", hostname)
-	mu.Unlock()
 
 }
 
@@ -31,8 +31,8 @@ func GetLogger() *logrus.Entry {
 
 func AddContext(key string, value interface{}) {
 	mu.Lock()
+	defer mu.Unlock()
 	ctxlogger = ctxlogger.WithField(key, value)
-	mu.Unlock()
 }
 
 func SetFormatter(formatter string) {
@@ -44,33 +44,34 @@ func SetFormatter(formatter string) {
 		_formatter = &logrus.TextFormatter{}
 	}
 	mu.Lock()
+	defer mu.Unlock()
 	data := ctxlogger.Data
 	logrus.SetFormatter(_formatter)
 	ctxlogger = logrus.WithFields(data)
-	mu.Unlock()
 }
 
 func SetOutput(out io.Writer) {
 	mu.Lock()
+	defer mu.Unlock()
 	data := ctxlogger.Data
 	logrus.SetOutput(out)
 	ctxlogger = logrus.WithFields(data)
-	mu.Unlock()
 }
 
 func SetLevel(level string) {
-	var _level logrus.Level
-	switch level {
-	case "debug":
-		_level = logrus.DebugLevel
-	default:
+	_level, err := logrus.ParseLevel(level)
+	if err != nil {
 		_level = logrus.InfoLevel
 	}
 	mu.Lock()
+	defer mu.Unlock()
 	data := ctxlogger.Data
 	logrus.SetLevel(_level)
 	ctxlogger = logrus.WithFields(data)
-	mu.Unlock()
+}
+
+func GetLoglevel() string {
+	return logrus.GetLevel().String()
 }
 
 func WithField(key string, value interface{}) *logrus.Entry {
@@ -89,17 +90,17 @@ func Info(args ...interface{}) {
 
 // Wrapper for Logrus Warn()
 func Warn(args ...interface{}) {
-	ctxlogger.Debug(args...)
+	ctxlogger.Warn(args...)
 }
 
 // Wrapper for Logrus Error()
 func Error(args ...interface{}) {
-	ctxlogger.Debug(args...)
+	ctxlogger.Error(args...)
 }
 
 // Wrapper for Logrus Fatal()
 func Fatal(args ...interface{}) {
-	ctxlogger.Debug(args...)
+	ctxlogger.Fatal(args...)
 }
 
 func Errorf(format string, args ...interface{}) {
