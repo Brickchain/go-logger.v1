@@ -3,7 +3,6 @@ package logger
 import (
 	"testing"
 	"strings"
-	"gitlab.brickchain.com/brickchain/oauth2-idp/logger"
 	"encoding/json"
 )
 
@@ -31,7 +30,7 @@ func TestAddContext(t *testing.T) {
 }
 
 func TestSetOutput(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	Info("test")
@@ -46,7 +45,7 @@ func TestSetOutput(t *testing.T) {
 }
 
 func TestSetFormatter(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetFormatter("text")
@@ -63,7 +62,7 @@ func TestSetFormatter(t *testing.T) {
 }
 
 func TestDebug(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("debug")
@@ -81,7 +80,7 @@ func TestDebug(t *testing.T) {
 }
 
 func TestWithField(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 
@@ -100,7 +99,7 @@ func TestWithField(t *testing.T) {
 }
 
 func TestWarn(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("warn")
@@ -118,7 +117,7 @@ func TestWarn(t *testing.T) {
 }
 
 func TestError(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("error")
@@ -136,7 +135,7 @@ func TestError(t *testing.T) {
 }
 
 func TestErrorf(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("error")
@@ -158,7 +157,7 @@ func TestErrorf(t *testing.T) {
 }
 
 func TestInfof(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("info")
@@ -180,7 +179,7 @@ func TestInfof(t *testing.T) {
 }
 
 func TestWarningf(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("warn")
@@ -202,7 +201,7 @@ func TestWarningf(t *testing.T) {
 }
 
 func TestDebugf(t *testing.T) {
-	org_writer := logger.GetLogger().Logger.Out
+	org_writer := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("debug")
