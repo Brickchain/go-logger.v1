@@ -232,6 +232,10 @@ func TestUnknownLogLevel(t *testing.T) {
 	SetLevel("info")
 }
 
+func TestWithFields(t *testing.T) {
+	_ = WithFields(Fields{"test":"ok"})
+}
+
 func parseJson(data []byte) map[string]interface{} {
 	d := make(map[string]interface{})
 	_ = json.Unmarshal(data, &d)

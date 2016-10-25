@@ -81,7 +81,11 @@ func WithField(key string, value interface{}) *logrus.Entry {
 }
 
 func WithFields(fields Fields) *logrus.Entry {
-	return ctxlogger.WithFields(fields)
+	_fields := logrus.Fields{}
+	for k,v := range fields {
+		_fields[k] = v
+	}
+	return ctxlogger.WithFields(_fields)
 }
 
 // Wrapper for Logrus Debug()
