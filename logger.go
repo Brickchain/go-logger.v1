@@ -15,6 +15,8 @@ var (
 	mu *sync.Mutex
 )
 
+type Fields map[string]interface{}
+
 func init() {
 	mu = &sync.Mutex{}
 	mu.Lock()
@@ -76,6 +78,10 @@ func GetLoglevel() string {
 
 func WithField(key string, value interface{}) *logrus.Entry {
 	return ctxlogger.WithField(key, value)
+}
+
+func WithFields(fields Fields) *logrus.Entry {
+	return ctxlogger.WithFields(fields)
 }
 
 // Wrapper for Logrus Debug()
