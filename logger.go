@@ -4,15 +4,17 @@ Logger for Brickchain software
 package logger
 
 import (
-	"os"
-	"github.com/Sirupsen/logrus"
 	"io"
+	"os"
+	"runtime"
 	"sync"
+
+	"github.com/Sirupsen/logrus"
 )
 
 var (
 	ctxlogger *logrus.Entry
-	mu *sync.Mutex
+	mu        *sync.Mutex
 )
 
 type Fields map[string]interface{}
@@ -82,7 +84,7 @@ func WithField(key string, value interface{}) *logrus.Entry {
 
 func WithFields(fields Fields) *logrus.Entry {
 	_fields := logrus.Fields{}
-	for k,v := range fields {
+	for k, v := range fields {
 		_fields[k] = v
 	}
 	return ctxlogger.WithFields(_fields)
@@ -90,41 +92,50 @@ func WithFields(fields Fields) *logrus.Entry {
 
 // Wrapper for Logrus Debug()
 func Debug(args ...interface{}) {
-	ctxlogger.Debug(args...)
+	loggerWithCaller().Debug(args...)
 }
 
 // Wrapper for Logrus Info()
 func Info(args ...interface{}) {
-	ctxlogger.Info(args...)
+	loggerWithCaller().Info(args...)
 }
 
 // Wrapper for Logrus Warn()
 func Warn(args ...interface{}) {
-	ctxlogger.Warn(args...)
+	loggerWithCaller().Warn(args...)
 }
 
 // Wrapper for Logrus Error()
 func Error(args ...interface{}) {
-	ctxlogger.Error(args...)
+	loggerWithCaller().Error(args...)
 }
 
 // Wrapper for Logrus Fatal()
 func Fatal(args ...interface{}) {
-	ctxlogger.Fatal(args...)
+	loggerWithCaller().Fatal(args...)
 }
 
 func Errorf(format string, args ...interface{}) {
-	ctxlogger.Errorf(format, args...)
+	loggerWithCaller().Errorf(format, args...)
 }
 
 func Infof(format string, args ...interface{}) {
-	ctxlogger.Infof(format, args...)
+	loggerWithCaller().Infof(format, args...)
 }
 
 func Warningf(format string, args ...interface{}) {
-	ctxlogger.Warningf(format, args...)
+	loggerWithCaller().Warningf(format, args...)
 }
 
 func Debugf(format string, args ...interface{}) {
-	ctxlogger.Debugf(format, args...)
+	loggerWithCaller().Debugf(format, args...)
+}
+
+func loggerWithCaller() *logrus.Entry {
+	_, file, line, _ := runtime.Caller(2)
+	fields := logrus.Fields{
+		"file": file,
+		"line": line,
+	}
+	return ctxlogger.WithFields(fields)
 }
