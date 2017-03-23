@@ -1,6 +1,9 @@
 image: golang:1.7
 
 before_script:
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$SSH_PRIVATE_KEY")
+  - mkdir -p $HOME/.ssh && ssh-keyscan -H gitlab.brickchain.com >> $HOME/.ssh/known_hosts
   - git config --global url."git@gitlab.brickchain.com:".insteadOf "https://gitlab.brickchain.com/"
   - mkdir -p /go/src/gitlab.brickchain.com/libs
   - ln -s $CI_PROJECT_DIR /go/src/gitlab.brickchain.com/libs/$CI_PROJECT_NAME
