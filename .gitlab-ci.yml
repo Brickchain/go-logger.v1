@@ -2,9 +2,9 @@ image: golang:1.7
 
 before_script:
   - git config --global url."git@gitlab.brickchain.com:".insteadOf "https://gitlab.brickchain.com/"
-  - mkdir -p /go/src/gitlab.brickchain.com/brickchain
-  - ln -s $CI_PROJECT_DIR /go/src/gitlab.brickchain.com/brickchain/$CI_PROJECT_NAME
-  - cd /go/src/gitlab.brickchain.com/brickchain/$CI_PROJECT_NAME
+  - mkdir -p /go/src/gitlab.brickchain.com/libs
+  - ln -s $CI_PROJECT_DIR /go/src/gitlab.brickchain.com/libs/$CI_PROJECT_NAME
+  - cd /go/src/gitlab.brickchain.com/libs/$CI_PROJECT_NAME
   
 stages:
   - test
