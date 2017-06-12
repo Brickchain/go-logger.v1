@@ -139,3 +139,15 @@ func loggerWithCaller() *logrus.Entry {
 	}
 	return ctxlogger.WithFields(fields)
 }
+
+func GetWriter() io.Writer {
+	return &LogWriter{}
+}
+
+type LogWriter struct {
+}
+
+func (l *LogWriter) Write(p []byte) (n int, err error) {
+	logger.Info(string(p))
+	return len(p), nil
+}
