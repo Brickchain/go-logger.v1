@@ -6,7 +6,7 @@ Manage logger context and settings on a global level by using the package level 
 package main
 
 import (
-  "gitlab.brickchain.com/brickchain/logger"
+  "gitlab.brickchain.com/libs/go-logger.v1"
   "os"
 )
 
