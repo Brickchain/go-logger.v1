@@ -148,6 +148,6 @@ type LogWriter struct {
 }
 
 func (l *LogWriter) Write(p []byte) (n int, err error) {
-	logger.Info(string(p))
+	Info(string(p))
 	return len(p), nil
 }
