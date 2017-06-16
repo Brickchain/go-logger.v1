@@ -9,6 +9,8 @@ import (
 	"runtime"
 	"sync"
 
+	"log"
+
 	"github.com/Sirupsen/logrus"
 )
 
@@ -166,4 +168,10 @@ func (l *LogWriter) Write(p []byte) (n int, err error) {
 		Error(string(p))
 	}
 	return len(p), nil
+}
+
+func GetStandardLogger(level string) *log.Logger {
+	writer := GetWriterWithLevel(level)
+
+	return log.New(writer, "", 0)
 }
