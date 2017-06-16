@@ -141,13 +141,29 @@ func loggerWithCaller() *logrus.Entry {
 }
 
 func GetWriter() io.Writer {
-	return &LogWriter{}
+	return &LogWriter{
+		level: "info",
+	}
+}
+
+func GetWriterWithLevel(level string) io.Writer {
+	return &LogWriter{
+		level: level,
+	}
 }
 
 type LogWriter struct {
+	level string
 }
 
 func (l *LogWriter) Write(p []byte) (n int, err error) {
-	Info(string(p))
+	switch l.level {
+	case "debug":
+		Debug(string(p))
+	case "info":
+		Info(string(p))
+	case "error":
+		Error(string(p))
+	}
 	return len(p), nil
 }
