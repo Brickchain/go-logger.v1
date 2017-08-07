@@ -4,6 +4,7 @@ Logger for Brickchain software
 package logger
 
 import (
+	"context"
 	"io"
 	"os"
 	"runtime"
@@ -174,4 +175,9 @@ func GetStandardLogger(level string) *log.Logger {
 	writer := GetWriterWithLevel(level)
 
 	return log.New(writer, "", 0)
+}
+
+func ForContext(ctx context.Context) *logrus.Entry {
+	reqID, _ := ctx.Value(0).(string)
+	return ctxlogger.WithField("request-id", reqID)
 }
