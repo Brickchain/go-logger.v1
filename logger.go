@@ -20,6 +20,10 @@ var (
 	mu        *sync.Mutex
 )
 
+type Entry struct {
+	entry *logrus.Entry
+}
+
 type Fields map[string]interface{}
 
 func init() {
@@ -177,7 +181,75 @@ func GetStandardLogger(level string) *log.Logger {
 	return log.New(writer, "", 0)
 }
 
-func ForContext(ctx context.Context) *logrus.Entry {
+func ForContext(ctx context.Context) *Entry {
 	reqID, _ := ctx.Value(0).(string)
-	return ctxlogger.WithField("request-id", reqID)
+	return &Entry{
+		entry: ctxlogger.WithField("request-id", reqID),
+	}
+}
+
+func (e *Entry) WithField(key string, value interface{}) *Entry {
+	e.entry = e.entry.WithField(key, value)
+	return e
+}
+
+func (e *Entry) WithFields(fields Fields) *Entry {
+	_fields := logrus.Fields{}
+	for k, v := range fields {
+		_fields[k] = v
+	}
+	e.entry = e.entry.WithFields(_fields)
+	return e
+}
+
+// Wrapper for Logrus Debug()
+func (e *Entry) Debug(args ...interface{}) {
+	e.loggerWithCaller().entry.Debug(args...)
+}
+
+// Wrapper for Logrus Info()
+func (e *Entry) Info(args ...interface{}) {
+	e.loggerWithCaller().entry.Info(args...)
+}
+
+// Wrapper for Logrus Warn()
+func (e *Entry) Warn(args ...interface{}) {
+	e.loggerWithCaller().entry.Warn(args...)
+}
+
+// Wrapper for Logrus Error()
+func (e *Entry) Error(args ...interface{}) {
+	e.loggerWithCaller().entry.Error(args...)
+}
+
+// Wrapper for Logrus Fatal()
+func (e *Entry) Fatal(args ...interface{}) {
+	e.loggerWithCaller().entry.Fatal(args...)
+}
+
+func (e *Entry) Errorf(format string, args ...interface{}) {
+	e.loggerWithCaller().entry.Errorf(format, args...)
+}
+
+func (e *Entry) Infof(format string, args ...interface{}) {
+	e.loggerWithCaller().entry.Infof(format, args...)
+}
+
+func (e *Entry) Warningf(format string, args ...interface{}) {
+	e.loggerWithCaller().entry.Warningf(format, args...)
+}
+
+func (e *Entry) Debugf(format string, args ...interface{}) {
+	e.loggerWithCaller().entry.Debugf(format, args...)
+}
+
+func (e *Entry) loggerWithCaller() *Entry {
+	_, file, line, _ := runtime.Caller(2)
+	fields := logrus.Fields{
+		"file": file,
+		"line": line,
+	}
+	n := &*e
+	n.entry = n.entry.WithFields(fields)
+	return n
 }

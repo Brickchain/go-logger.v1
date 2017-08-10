@@ -1,9 +1,11 @@
 package logger
 
 import (
-	"testing"
-	"strings"
+	"context"
 	"encoding/json"
+	"fmt"
+	"strings"
+	"testing"
 )
 
 func init() {
@@ -233,7 +235,7 @@ func TestUnknownLogLevel(t *testing.T) {
 }
 
 func TestWithFields(t *testing.T) {
-	_ = WithFields(Fields{"test":"ok"})
+	_ = WithFields(Fields{"test": "ok"})
 }
 
 func parseJson(data []byte) map[string]interface{} {
@@ -255,4 +257,18 @@ func (w *DummyWriter) Write(p []byte) (n int, err error) {
 
 func (w *DummyWriter) GetBuffer() []byte {
 	return w.buffer
+}
+
+func TestForContext(t *testing.T) {
+	org_writer := GetLogger().Logger.Out
+	defer SetOutput(org_writer)
+	out := DummyWriter{}
+	SetOutput(&out)
+	SetLevel("info")
+
+	ctx := context.WithValue(context.Background(), 0, "abc")
+	l := ForContext(ctx)
+	l.Info("test stuff")
+
+	fmt.Println(string(out.GetBuffer()))
 }
