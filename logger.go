@@ -122,6 +122,10 @@ func Fatal(args ...interface{}) {
 	loggerWithCaller().Fatal(args...)
 }
 
+func Fatalf(format string, args ...interface{}) {
+	loggerWithCaller().Fatalf(format, args...)
+}
+
 func Errorf(format string, args ...interface{}) {
 	loggerWithCaller().Errorf(format, args...)
 }
