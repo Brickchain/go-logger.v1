@@ -4,7 +4,7 @@ This logger components is used by Integrity components that logs output.
 
 Based on [Logrus](https://github.com/Sirupsen/logrus).
 
-It manage logger context and settings on a global level by using the package level functions.
+It manages logger context and settings on a global level by using the package level functions.
 
 ## Usage
 ```go
