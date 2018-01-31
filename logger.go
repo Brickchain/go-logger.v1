@@ -30,8 +30,6 @@ import (
 	"runtime"
 	"sync"
 
-	"log"
-
 	"github.com/Sirupsen/logrus"
 )
 
@@ -184,47 +182,6 @@ func loggerWithCaller() *logrus.Entry {
 		"line": line,
 	}
 	return ctxlogger.WithFields(fields)
-}
-
-// GetWriter returns the current io.Writer (with level "info")
-func GetWriter() io.Writer {
-	return &LogWriter{
-		level: "info",
-	}
-}
-
-// GetWriterWithLevel returns the current io.Writer with the level given as argument
-func GetWriterWithLevel(level string) io.Writer {
-	return &LogWriter{
-		level: level,
-	}
-}
-
-// LogWriter contains the log level
-type LogWriter struct {
-	level string
-}
-
-// Write: TODO docs
-func (l *LogWriter) Write(p []byte) (n int, err error) {
-	switch l.level {
-	case "debug":
-		Debug(string(p))
-	case "info":
-		Info(string(p))
-	case "warn", "warning":
-		Warn(string(p))
-	case "error":
-		Error(string(p))
-	}
-	return len(p), nil
-}
-
-// GetStandardLogger returns a standard "log" logger
-func GetStandardLogger(level string) *log.Logger {
-	writer := GetWriterWithLevel(level)
-
-	return log.New(writer, "", 0)
 }
 
 // ForContext TODO docs
