@@ -1,5 +1,5 @@
 /*
-The package Logger is a wrapper for the [Logrus](https://github.com/Sirupsen/logrus) logger package.
+The package Logger is a wrapper for the Logrus logger package.
 
 Logger is used by most Brickchain software to enable context based logging with details needed by each component.
 
