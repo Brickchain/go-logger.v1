@@ -30,7 +30,7 @@ import (
 	"runtime"
 	"sync"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -111,18 +111,29 @@ func GetLoglevel() string {
 	return logrus.GetLevel().String()
 }
 
-// WithField adds another field to the Logrus entry context
-func WithField(key string, value interface{}) *logrus.Entry {
-	return ctxlogger.WithField(key, value)
+// AddField adds a field to the current context
+func (e *Entry) AddField(key string, value interface{}) {
+	mu.Lock()
+	defer mu.Unlock()
+	e.entry = e.entry.WithField(key, value)
 }
 
-// WithFields adds more Fields to the Logrus entry context
-func WithFields(fields Fields) *logrus.Entry {
+// WithField adds another field to the logger entry context
+func WithField(key string, value interface{}) *Entry {
+	return &Entry{
+		entry: ctxlogger.WithField(key, value),
+	}
+}
+
+// WithFields adds more Fields to the logger entry context
+func WithFields(fields Fields) *Entry {
 	_fields := logrus.Fields{}
 	for k, v := range fields {
 		_fields[k] = v
 	}
-	return ctxlogger.WithFields(_fields)
+	return &Entry{
+		entry: ctxlogger.WithFields(_fields),
+	}
 }
 
 // Debug is the wrapper for Logrus Debug()
