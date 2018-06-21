@@ -32,22 +32,22 @@ func TestAddContext(t *testing.T) {
 }
 
 func TestSetOutput(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	Info("test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["msg"] != "test" {
 		t.Error("Written data not same after fetch")
 	}
 
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestSetFormatter(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetFormatter("text")
@@ -60,29 +60,29 @@ func TestSetFormatter(t *testing.T) {
 	}
 
 	SetFormatter("json")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestDebug(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("debug")
 
 	Debug("test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "debug" {
 		t.Error("Message not written with debug level")
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestWithField(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 
@@ -90,61 +90,61 @@ func TestWithField(t *testing.T) {
 
 	localLogger.Info("test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["testkey"] == nil {
 		t.Error("Message does not have testkey set")
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestWarn(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("warn")
 
 	Warn("test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "warning" {
 		t.Error("Message not written with warning level")
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestError(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("error")
 
 	Error("test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "error" {
 		t.Error("Message not written with error level")
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestErrorf(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("error")
 
 	Errorf("Msg: %s", "test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "error" {
 		t.Error("Message not written with error level")
@@ -155,18 +155,18 @@ func TestErrorf(t *testing.T) {
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestInfof(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("info")
 
 	Infof("Msg: %s", "test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "info" {
 		t.Error("Message not written with info level")
@@ -177,18 +177,18 @@ func TestInfof(t *testing.T) {
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestWarningf(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("warn")
 
 	Warningf("Msg: %s", "test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "warning" {
 		t.Error("Message not written with warning level")
@@ -199,18 +199,18 @@ func TestWarningf(t *testing.T) {
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestDebugf(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
+	orgWriter := GetLogger().Logger.Out
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("debug")
 
 	Debugf("Msg: %s", "test")
 
-	data := parseJson(out.GetBuffer())
+	data := parseJSON(out.GetBuffer())
 
 	if data["level"] != "debug" {
 		t.Error("Message not written with debug level")
@@ -221,7 +221,7 @@ func TestDebugf(t *testing.T) {
 	}
 
 	SetLevel("info")
-	SetOutput(org_writer)
+	SetOutput(orgWriter)
 }
 
 func TestUnknownLogLevel(t *testing.T) {
@@ -238,7 +238,7 @@ func TestWithFields(t *testing.T) {
 	_ = WithFields(Fields{"test": "ok"})
 }
 
-func parseJson(data []byte) map[string]interface{} {
+func parseJSON(data []byte) map[string]interface{} {
 	d := make(map[string]interface{})
 	_ = json.Unmarshal(data, &d)
 
@@ -260,8 +260,8 @@ func (w *DummyWriter) GetBuffer() []byte {
 }
 
 func TestForContext(t *testing.T) {
-	org_writer := GetLogger().Logger.Out
-	defer SetOutput(org_writer)
+	orgWriter := GetLogger().Logger.Out
+	defer SetOutput(orgWriter)
 	out := DummyWriter{}
 	SetOutput(&out)
 	SetLevel("info")
